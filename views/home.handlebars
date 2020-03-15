@@ -1,0 +1,42 @@
+<div class="jumbotron-fluid text-center ">
+    <div class="jumbotron text-center shadow-lg p-3 mb-5 bg-white rounded">
+        <h1><em>Medical Article Scraper</em></h1>
+    </div>
+</div>
+
+<div class="col-md-12">
+    {{#if article}}
+    {{#each article}}
+    <div class="container">
+        <div class="card-header" id="titleinput">
+            <a href={{this.title}} target="_blank" rel="noopener noreferrer">{{this.title}}</a>
+            
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0" id="bodyinput">
+                <h5>{{this.link}}</h5>
+                <hr>
+                <p> {{this.summary}}</p> <button type="button" class="btn btn-success save" data-id={{this._id}}>Save
+                    Article</button>
+                <img src="{{this.image}}" />
+
+                {{!-- <br><br> --}}
+            </blockquote>
+        </div>
+    </div>
+    <br>
+
+    {{/each}}
+    {{else}}
+    <div class="card shadow mb-5 bg-black rounded">
+        <div class="card-header" id="titleinput">
+            <blockquote class="blockquote mb-0">
+                <h4 class="text-center">scrape some articles Here!</h4>
+            </blockquote>
+        </div>
+    </div>
+</div>
+</div>
+{{/if}}
+</div>
+<footer class="text-center">©2020 Heath Media</footer>
