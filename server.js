@@ -28,7 +28,8 @@ app.engine("handlebars", exphbs({ defaultLayout: "main", partialsDir: path.join(
 app.set("view engine", "handlebars");
 
 // Connect to the Mongo DB
-var mongodb_url = process.env.MONGO_URL || "mongodb://localhost:27017";
+//process.env.MONGO_URL ||
+var mongodb_url = "mongodb://localhost:27017/local";
 mongoose.connect( mongodb_url, { useNewUrlParser: true });
 var db = mongoose.connection;
 
@@ -45,7 +46,11 @@ db.once("open", function(){
 app.get("/", function(req,res){
   Article.find({"saved": false}, function(err, data){
     var mdObject = {
-      article: data
+      article: data.map(d=>{return {summary : d.summary, 
+                                    title : d.title,
+                                    link : d.link,
+                                    image: d.image      
+      }})
     };
     console.log(mdObject);
     res.render("home", mdObject);
@@ -62,8 +67,9 @@ app.get("/saved", function(req, res){
 });
 
 app.get("/scrape", function(req, res){
+  var linkUrl = "https://www.medicalnewstoday.com"
   // Making a request via axios for reddit's "webdev" board. The page's HTML is passed as the callback's third argument
-  axios.get("https://www.medicalnewstoday.com/").then(function(response) {
+  axios.get(linkUrl).then(function(response) {
 
   // Load the HTML into cheerio and save it to a variable
   // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
@@ -78,17 +84,17 @@ app.get("/scrape", function(req, res){
 
     // In the currently selected element, look at its child elements (i.e., its a-tags),
     // then save the values for any "href" attributes that the child elements may have
-    var link = $(element).find("a.css-ni2lnp").attr("href");
+    var link = linkUrl + $(element).find("a.css-ni2lnp").attr("href");
 
     var summary = $(element).find("a.css-2fdibo").text();
 
     var image = $(element).find("lazy-image").attr("src");
-    var realImage = image?image.split("?")[0].substr(2):undefined;
+    var realImage = image?"http://" + image.split("?")[0].substr(2):undefined;
 
     // Save these results in an object that we'll push into the results array we defined earlier
     if(title){
       var result = {title: title, link: link, summary: summary, image: realImage};
-      db.Article.create(result)
+        Article.create(result)
         .then(function(dbArticle) {
           // View the added result in the console
           console.log(dbArticle);
@@ -98,10 +104,11 @@ app.get("/scrape", function(req, res){
           console.log(err);
         });
       }
+       // Log the results once you've looped through each of the elements found with cheerio
+      console.log(result);
     });
-    // Log the results once you've looped through each of the elements found with cheerio
-    console.log(results);
   });
+  res.sendStatus(200);
 });
 
 app.get("/articles", function(req, res){
