@@ -9,15 +9,16 @@
     {{#each article}}
     <div class="container">
         <div class="card-header" id="titleinput">
-            <a href={{this.link}}  rel="noopener noreferrer">{{this.title}}</a>
-            
+            <a href={{this.link}}  rel="noopener noreferrer">{{this.title}}</a>  
         </div>
+        
         <div class="card-body">
             <blockquote class="blockquote mb-0" id="bodyinput">
-                <p> {{this.summary}}</p> <button type="button" class="btn btn-success save" data-id={{this._id}}>Save
-                    Article</button>
-                <img src="{{this.image}}" />
-
+                <p class="col-md-12"> {{this.summary}}</p> 
+                <img src="{{this.image}}" class="col-md-12"/>
+                <button type="button" class="btn btn-success save col-md-2" style="margin-top: 20px; margin-left: 13px;" data-id={{this._id}}>
+                    Save Article
+                </button>
             </blockquote>
         </div>
     </div>

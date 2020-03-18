@@ -8,12 +8,14 @@
             <div class="modal-body">
                 {{#if this.notes}}
                     {{#each this.notes}}
+                    {{#if this.body}}
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <p class="previousNotes"> {{this.body}}</p>
                                 <button type="button" class="btn btn-danger deleteNote" data-note-id={{this._id}} data-article-id={{this.article}}>X</button>
                             </div>
                         </div>
+                    {{/if}}
                     {{/each}}
                 {{else}}
                     <div class="panel panel-default">

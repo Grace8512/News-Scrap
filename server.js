@@ -24,12 +24,12 @@ app.use(express.json());
 app.use(express.static("public"));
 
 //Set up handlevar view
-app.engine("handlebars", exphbs({ defaultLayout: "main", partialsDir: path.join(__dirname, "/views/layouts/partials")}));
+app.engine("handlebars", exphbs({ defaultLayout: "main", partialsDir: path.join(__dirname, "/views")}));
 app.set("view engine", "handlebars");
 
 // Connect to the Mongo DB
-//process.env.MONGO_URL ||
-var mongodb_url = "mongodb://localhost:27017/local";
+//process.env.MONGO_URL || 
+var mongodb_url = process.env.MONGO_URL || "mongodb://localhost:27017/local";
 mongoose.connect( mongodb_url, { useNewUrlParser: true });
 var db = mongoose.connection;
 
@@ -49,7 +49,8 @@ app.get("/", function(req,res){
       article: data.map(d=>{return {summary : d.summary, 
                                     title : d.title,
                                     link : d.link,
-                                    image: d.image      
+                                    image: d.image,
+                                    _id: d._id      
       }})
     };
     console.log(mdObject);
@@ -60,8 +61,21 @@ app.get("/", function(req,res){
 app.get("/saved", function(req, res){
   Article.find({"saved": true}).populate("note").exec(function(err, articles){
     var mdObject = {
-      article: articles
+      article: articles.map(d=>{
+        console.log("d.note"+d.note);
+        return {summary : d.summary, 
+                title : d.title,
+                link : d.link,
+                image: d.image,
+                _id: d._id,
+                notes: d.note     
+      }})
     };
+    
+    for(var i=0; i<mdObject.article.length; i++){
+      console.log("article title" + mdObject.article[i].title);
+      console.log("note mdObject" + mdObject.article[i].notes); 
+    }
     res.render("saved", mdObject);
   });
 });
@@ -127,14 +141,15 @@ app.get("/articles/:id", function(req, res){
     if(err){
       console.log(err);
     }else{
-      res.json(doc);
+      res.json(data);
     }
   });
 });
 
 //save article
-app.post("/articles/saved/:id", function(req, res){
+app.post("/articles/save/:id", function(req, res){
   Article.findOneAndUpdate({"_id": req.params.id}, {"saved": true})
+  //article.<-뒤는 데이터 베이스 정보가 온다. 
   .exec(function(err,data){
     if(err)throw err;
     res.send(data);
@@ -156,15 +171,15 @@ app.post("/note/saved/:id", function(req, res){
     body: req.body.text,
     article: req.params.id
   });
-  // console.log(req.body);
-  newNote.saved(function(err,note){
+   console.log("new note" + newNote);
+  newNote.save(function(err,note){
     if(err){
       console.log("note save err: ", err);
     }else{
-      Article.findByIdAndUpdate({"_id": req.params.id}, {$push: {"note":note}})
+      Article.findByIdAndUpdate({"_id": req.params.id}, {$push: {"note":newNote}})
       .exec(function(err){
         if(err)throw err;
-        res.send(note);
+        res.send(newNote);
       });
     }
   });
@@ -172,7 +187,7 @@ app.post("/note/saved/:id", function(req, res){
 
 //delete note
 app.delete("/note/delete/:note_id/:article_id", function(req, res){
-  Note.findByIdAndRemove({"_id": req.params.note_id}, function(err){
+  Note.findByIdAndRemove(req.params.note_id, function(err){
     if(err){
       console.log(err);
       res.send(err);

@@ -13,11 +13,10 @@
             </div>
             <div class="card-body">
                 <blockquote class="blockquote mb-0" id="bodyinput">
-                    <h5>{{this.author}}</h5>
-                    <hr>
-                    <p> {{this.summary}}</p>
+                    <p class="col-md-12"> {{this.summary}}</p> 
+                    <img src="{{this.image}}" class="col-md-12"/>
                     <br><br>
-                    <button type="button" class="btn btn-success addNote" data-toggle="modal"
+                    <button type="button" class="btn btn-success addNote" style="margin-left:13px;" data-toggle="modal"
                         data-target="#noteModal{{this._id}}" data-id={{this._id}}>Add a Note</button>
                     <button type="button" class="btn btn-danger delete" data-id={{this._id}}>Delete</button>
             </div>
@@ -41,5 +40,6 @@
 <footer class="text-center"></footer>
 <!--Clicked Notes Modal-->
 {{#each article}}
-{{> notes-modal }}
+{{> note }}
+{{!-- partial handlebar 핸들바 안에 사용되는 핸들바 --}}
 {{/each}}
