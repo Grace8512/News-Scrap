@@ -35,7 +35,7 @@ var db = mongoose.connection;
 
 //test mongooes
 db.on("error", function(err){
-  console.log("mongoose err: ", error);
+  console.log("mongoose err: " + err);
 });
 
 db.once("open", function(){
