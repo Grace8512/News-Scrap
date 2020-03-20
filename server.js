@@ -53,7 +53,7 @@ app.get("/", function(req,res){
                                     image: d.image,
                                     _id: d._id      
       }})
-    };
+    };//맵을 사용해서 핸들바에 데이터 베이스에서 나오는 데이터를 바로 가져오면 보안문제가 있어서 원하는 변수만 가져와서 보여줄 수 있도록 함. 
     console.log(mdObject);
     res.render("home", mdObject);
   });
@@ -69,10 +69,10 @@ app.get("/saved", function(req, res){
                 link : d.link,
                 image: d.image,
                 _id: d._id,
-                notes: d.note     
+                notes: d.note.map(x => {return {_id: x._id, body: x.body, article: x.article}})   
       }})
     };
-    
+    console.log('print out saved');
     for(var i=0; i<mdObject.article.length; i++){
       console.log("article title" + mdObject.article[i].title);
       console.log("note mdObject" + mdObject.article[i].notes); 
@@ -187,6 +187,7 @@ app.post("/note/saved/:id", function(req, res){
 });
 
 //delete note
+
 app.delete("/note/delete/:note_id/:article_id", function(req, res){
   Note.findByIdAndRemove(req.params.note_id, function(err){
     if(err){
@@ -201,6 +202,26 @@ app.delete("/note/delete/:note_id/:article_id", function(req, res){
     }
   });
 });
+
+// app.delete("/note/delete/:note_id/:article_id", function(req, res){
+  
+//       Article.findAndModify({"_id": req.params.article_id}, {$pull: {"note": req.params.note_id}})
+//       .exec(function(err){
+//         res.send("Note Deleted");
+//         if(err){
+//           console.log(err);
+//           res.send(err);
+//         }else{
+//           Note.findByIdAndRemove(req.params.note_id, function(err){
+//             if(err){
+//               console.log(err);
+//               res.send(err); 
+//         }
+//       })
+//     }
+//   }
+// )
+// });
 
 //Listen port
 app.listen(PORT, function(){
