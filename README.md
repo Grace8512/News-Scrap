@@ -17,7 +17,7 @@ The comments be saved to the database as well and associated with their articles
 Users also be able to delete comments left on articles. 
 All stored comments visible to every user.
 
-[Click to Try This App!](https://news-app2020.herokuapp.com)
+#### [Click to Try This App!](https://news-app2020.herokuapp.com)
 
 ### Technologies Used
 
