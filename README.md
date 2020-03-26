@@ -1,1 +1,28 @@
-# Week-18
+# Week-18. News-Scrap
+## Medical News 
+
+### OverView
+created a web app that lets users view and leave comments on the latest news. I used Mongoose and Cheerio to scrape news from [Medical news today](https://www.medicalnewstoday.com/) website. 
+
+### How It Works
+
+Once articles are loaded, user can read the articles:
+* Headline - the title of the article
+* Summary - a short summary of the article
+* URL - the url to the original article
+* Photos - the url to the original article
+
+Users be able to leave comments on the articles displayed and revisit them later.           
+The comments be saved to the database as well and associated with their articles.
+Users also be able to delete comments left on articles. 
+All stored comments visible to every user.
+
+[Click to Try This App!](https://news-app2020.herokuapp.com)
+
+### Technologies Used
+
+* Node.js
+* Express.js
+* Handlebars.js
+* MongoDB
+* Mongoose
