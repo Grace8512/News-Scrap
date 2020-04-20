@@ -92,6 +92,7 @@ app.get("/scrape", function(req, res){
 
   // With cheerio, find each p-tag with the "title" class
   // (i: iterator. element: the current element)
+
   $("li.css-1ib8oek").each(function(i, element) {
 
     // Save the text of the element in a "title" variable
@@ -107,7 +108,12 @@ app.get("/scrape", function(req, res){
     var realImage = image?"http://" + image.split("?")[0].substr(2):undefined;
 
     // Save these results in an object that we'll push into the results array we defined earlier
+    const limit = 20;
+    
     if(title){
+      if(i>=limit){
+        break;
+      }
       var result = {title: title, link: link, summary: summary, image: realImage};
         Article.create(result)
         .then(function(dbArticle) {
