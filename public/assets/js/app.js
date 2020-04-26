@@ -1,4 +1,15 @@
 $(document).ready(function () {
+    // ADDED - Handle delete all button
+    $("#delete_all").on("click", () => {
+        $.ajax({
+            method: "DELETE",
+            url: "/delete_all"
+        }).done((data) => {
+            console.log(data);
+            window.location.reload();
+        });
+    })
+
     //Handle Scrape button
     $("#scrape").on("click", function () {
         $.ajax({
