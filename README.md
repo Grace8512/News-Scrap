@@ -2,7 +2,7 @@
 ## Medical News 
 
 ### OverView
-created a web app that lets users view and leave comments on the latest news. I used Mongoose and Cheerio to scrape news from [Medical news today](https://www.medicalnewstoday.com/) website. 
+Created a web application that allows users to view and leave comments regarding the latest news. I used Mongoose and Cheerio to scrape news from the [Medical news today](https://www.medicalnewstoday.com/) website. 
 
 ### How It Works
 
